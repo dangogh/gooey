@@ -25,11 +25,6 @@ func getData(dataFile string) (interface{}, error) {
                 log.Println(err)
                 return nil, err
         }
-        d, err := yaml.Marshal(y)
-        if err != nil {
-                log.Println(err)
-                return nil, err
-        }
         return y, nil
 }
 
@@ -40,6 +35,6 @@ func main() {
                         log.Println(err)
                         continue
                 }
-                fmt.Print(y)
+                fmt.Println(y)
         }
 }
