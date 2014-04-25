@@ -9,7 +9,7 @@ import (
         "os"
 )
 
-func getData(dataFile string) (interface{}, error) {
+func getData(dataFile string) (map[string]interface{}, error) {
         f, err := os.Open(dataFile)
         if err != nil {
                 log.Println(err)
@@ -20,12 +20,17 @@ func getData(dataFile string) (interface{}, error) {
                 log.Println(err)
                 return nil, err
         }
-        var y interface{}
+        var y map[string]interface{}
         if err := yaml.Unmarshal([]byte(data), &y); err != nil {
                 log.Println(err)
                 return nil, err
         }
         return y, nil
+}
+
+type Galaxy struct {
+        Name    string
+        Size    uint
 }
 
 func main() {
@@ -35,6 +40,17 @@ func main() {
                         log.Println(err)
                         continue
                 }
-                fmt.Println(y)
+                var objs []interface{}
+                var obj interface{}
+                for _, intf := range y {
+                        switch intf {
+                        case "Galaxy":
+                                obj = Galaxy{}
+                        default:
+                                log.Printf("Don't know how to create a %v\n", intf)
+                        }
+                        objs = append(objs, obj)
+                }
+                fmt.Println(objs)
         }
 }
