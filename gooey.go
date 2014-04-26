@@ -67,6 +67,8 @@ func build(name string, val interface{}) (interface{}, error) {
                         if objtype, ok := t.(string); ok {
                                 return buildObj(name, objtype, vmap)
                         }
+                } else {
+                        fmt.Println("can't get the type")
                 }
 
                 var res map[string]interface{}
@@ -79,12 +81,16 @@ func build(name string, val interface{}) (interface{}, error) {
                 }
                 return res, nil
 
+        case map[interface{}]interface{}:
+                fmt.Println("type is map[interface{}]interface{}", name, val)
+                return val, nil
+
         case []string:
                 fmt.Println("type is []string", name, val)
                 return val, nil
 
         default:
-                fmt.Println("type is ??", name, val)
+                fmt.Printf("type of %s is %t\n", name, val)
                 return nil, fmt.Errorf("Don't know how to create a %v", val)
         }
 }
