@@ -28,6 +28,22 @@ func getData(dataFile string) (map[string]interface{}, error) {
         return y, nil
 }
 
+func createObj(t string, in interface{}) (interface{}, error) {
+        val, ok := in.(map[interface{}]interface{})
+        if !ok {
+                return nil, fmt.Errorf("Can't convert %v to a map\n", val)
+        }
+        var obj interface{}
+        switch t {
+        case "Galaxy":
+                obj = Galaxy{}
+        default:
+                return nil, fmt.Errorf("Don't know how to create a %v\n", t)
+        }
+
+        return obj, nil
+}
+
 type Galaxy struct {
         Name    string
         Size    uint
@@ -41,13 +57,12 @@ func main() {
                         continue
                 }
                 var objs []interface{}
-                var obj interface{}
-                for _, intf := range y {
-                        switch intf {
-                        case "Galaxy":
-                                obj = Galaxy{}
-                        default:
-                                log.Printf("Don't know how to create a %v\n", intf)
+                for t, val := range y {
+                        fmt.Println("t is ", t)
+                        obj, err := createObj(t, val)
+                        if err != nil {
+                                fmt.Println(err)
+                                continue
                         }
                         objs = append(objs, obj)
                 }
